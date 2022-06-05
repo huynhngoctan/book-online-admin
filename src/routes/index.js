@@ -1,5 +1,6 @@
 import Home from '~/pages/Home';
 import Products from '~/pages/Products';
+import Users from '~/pages/Users';
 
 const publicRoutes = [
     {
@@ -9,6 +10,11 @@ const publicRoutes = [
     {
         path: '/products',
         component: Products,
+    },
+    {
+        path: '/users',
+        component: Users,
+        layout: null,
     },
 ];
 
