@@ -1,0 +1,15 @@
+.wrapper {
+    height: var(--header-height);
+    padding: 0 36px;
+    box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.12);
+    position: fixed;
+    z-index: 999;
+    top: 0;
+    left: 0;
+    right: 0;
+    background-color: var(--primary-color);
+}
+
+.inner {
+    height: 100%;
+}
