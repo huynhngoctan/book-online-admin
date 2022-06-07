@@ -5,6 +5,7 @@
     --primary-color: #1a94ff;
     --header-height: 60px;
     --text-color: #333;
+    --white-color: #fff;
 }
 
 * {
@@ -21,4 +22,10 @@ body {
     font-family: 'Roboto', sans-serif;
     font-size: 1.6rem;
     line-height: 1.5;
+}
+input,
+button,
+[tabindex] {
+    outline: none;
+    border: none;
 }
