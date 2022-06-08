@@ -1,3 +1,8 @@
+.search,
+.search-result {
+    width: 450px;
+}
+
 .wrapper {
     --search-height: 40px;
     --search-border-radius: 96px;
@@ -29,7 +34,6 @@
 }
 
 .search {
-    width: 450px;
     background-color: #fff;
     height: 40px;
     border-radius: var(--search-border-radius);
@@ -55,6 +59,12 @@
     &:focus-within {
         border-color: rgba(0, 0, 0, 0.4);
     }
+}
+
+.search-result-title {
+    margin-top: 12px;
+    margin-left: 12px;
+    font-size: 1.6rem;
 }
 
 .loading,
