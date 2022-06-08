@@ -4,7 +4,7 @@ import {
     faXmarkCircle,
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import Tippy from '@tippyjs/react';
+import Tippy from '@tippyjs/react/headless';
 import classNames from 'classnames/bind';
 // import { useEffect, useState } from 'react';
 
@@ -42,6 +42,9 @@ export default function Header() {
                                 <AccountItem />
                                 <AccountItem />
                                 <AccountItem />
+                                <AccountItem />
+                                <AccountItem />
+                                <AccountItem />
                             </PopperWrapper>
                         </div>
                     )}
@@ -67,7 +70,47 @@ export default function Header() {
                         </button>
                     </div>
                 </Tippy>
-                <div className="acount-action">Acount</div>
+
+                <Tippy
+                    render={(attrs) => (
+                        <div
+                            className={cx('account-action')}
+                            tabIndex="-1"
+                            {...attrs}
+                        >
+                            <PopperWrapper>
+                                <ul className={cx('list-action')}>
+                                    <li>
+                                        <a
+                                            className={cx('action-link')}
+                                            href="/"
+                                        >
+                                            Thông tin cá nhân
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a
+                                            className={cx('action-link')}
+                                            href="/"
+                                        >
+                                            Đăng xuất
+                                        </a>
+                                    </li>
+                                </ul>
+                            </PopperWrapper>
+                        </div>
+                    )}
+                    interactive
+                >
+                    <div className={cx('account')}>
+                        <img
+                            className={cx('avatar')}
+                            src="https://lh3.googleusercontent.com/ogw/ADea4I7wyN6WgGDhKr7mh08qsgwi0O2_3kg9d3XzCMuR=s32-c-mo"
+                            alt="avatar"
+                        />
+                        <span className={cx('username')}> Tan Huynh</span>
+                    </div>
+                </Tippy>
             </div>
         </div>
     );

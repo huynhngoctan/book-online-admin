@@ -102,3 +102,43 @@
         background-color: rgba(22, 24, 35, 0.12);
     }
 }
+
+.account {
+    display: flex;
+    align-items: center;
+    height: 40px;
+}
+.avatar {
+    width: 30px;
+    height: 30px;
+    object-fit: cover;
+    border-radius: 50%;
+}
+.username {
+    margin-left: 8px;
+    font-size: 1.6rem;
+    color: var(--white-color);
+}
+
+//Account
+.account-action {
+    width: 200px;
+}
+
+.list-action {
+    list-style-type: none;
+    position: relative;
+}
+
+.action-link {
+    text-decoration: none;
+    color: var(--text-color);
+    display: block;
+    font-size: 1.6rem;
+    padding: 8px 12px;
+
+    &:hover {
+        cursor: pointer;
+        background-color: rgba(0, 0, 0, 0.1);
+    }
+}
