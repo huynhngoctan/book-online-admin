@@ -14,7 +14,6 @@ const publicRoutes = [
     {
         path: '/users',
         component: Users,
-        layout: null,
     },
 ];
 
