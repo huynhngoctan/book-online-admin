@@ -13,7 +13,11 @@ export default function Home() {
             >
                 Hello
             </Button>
-            <Button danger to="https://www.google.com/">
+            <Button
+                danger
+                to="https://www.google.com/"
+                onClick={() => alert('jell')}
+            >
                 Hello
             </Button>
         </div>
