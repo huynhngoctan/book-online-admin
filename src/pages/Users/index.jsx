@@ -1,5 +1,6 @@
 import { DataGrid } from '@mui/x-data-grid';
 import classNames from 'classnames/bind';
+import Image from '~/components/Image';
 import styles from './Users.module.scss';
 
 const cx = classNames.bind(styles);
@@ -12,7 +13,7 @@ const columns = [
         width: 200,
         renderCell: (params) => (
             <div className={cx('user')}>
-                <img
+                <Image
                     className={cx('avatar')}
                     src={params.row.avatar}
                     alt="avartar"
@@ -45,7 +46,7 @@ const rows = [
     {
         id: 2,
         usermame: 'Tan Huynh',
-        avatar: 'https://lh3.googleusercontent.com/ogw/ADea4I7wyN6WgGDhKr7mh08qsgwi0O2_3kg9d3XzCMuR=s32-c-mo',
+        avatar: 'https://lh3.googleusercontent.com/ogw/ADea4I7wyN6WgGDhKr7mh08qsgwi0O2_3kg9d3XzCMuR=s32-c-m',
         email: 'hntan2000@gmail.com',
         status: 'Đang sử dụng',
     },
