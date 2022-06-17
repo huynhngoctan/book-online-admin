@@ -11,6 +11,8 @@ export default function Button({
     disabled = false,
     edited = false,
     danger = false,
+    cancel = false,
+    medium = false,
     onClick,
     children,
     leftIcon,
@@ -44,6 +46,8 @@ export default function Button({
         primary,
         edited,
         danger,
+        cancel,
+        medium,
         disabled,
     });
     return (

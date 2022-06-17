@@ -56,3 +56,18 @@
         background-color: #ff1100;
     }
 }
+
+.cancel {
+    background-color: var(--cancel-color);
+    color: var(--text-color);
+    &:hover {
+        background-color: #969696;
+    }
+}
+
+//Button size
+.medium {
+    min-width: 120px;
+    padding: 8px 12px;
+    font-size: 1.6rem;
+}

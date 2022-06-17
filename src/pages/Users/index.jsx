@@ -44,6 +44,7 @@ export default function Users() {
                     <Button
                         edited
                         leftIcon={<FontAwesomeIcon icon={faPenToSquare} />}
+                        to={`/users/edit:${params.row.id}`}
                     >
                         Sửa
                     </Button>
