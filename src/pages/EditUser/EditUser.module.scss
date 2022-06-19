@@ -61,10 +61,18 @@
     font-size: 1.6rem;
     color: var(--text-color);
     outline: none;
+
+    &.error {
+        border-color: var(--danger-color);
+    }
 }
 
 .actions {
     display: flex;
     justify-content: flex-end;
     margin-top: 12px;
+}
+
+.form-error {
+    color: var(--danger-color);
 }
