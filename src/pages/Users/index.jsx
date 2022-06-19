@@ -70,6 +70,11 @@ export default function Users() {
     };
     return (
         <div className={cx('wrapper')}>
+            <div className={cx('actions')}>
+                <Button primary to="/users/new">
+                    Thêm
+                </Button>
+            </div>
             <DataGrid
                 className={cx('table')}
                 rows={data}

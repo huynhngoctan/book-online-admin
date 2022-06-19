@@ -5,21 +5,22 @@ import { useEffect, useRef } from 'react';
 import { useState } from 'react';
 import Button from '~/components/Button';
 import Image from '~/components/Image';
-import styles from './EditUser.module.scss';
+import styles from './NewUser.module.scss';
 
 const cx = classNames.bind(styles);
-export default function EditUser() {
-    const [avatar, setAvatar] = useState(
-        'https://lh3.googleusercontent.com/ogw/ADea4I7wyN6WgGDhKr7mh08qsgwi0O2_3kg9d3XzCMuR=s32-c-mo',
-    );
+export default function NewUser() {
+    const [avatar, setAvatar] = useState('');
     const initialState = {
-        avatar: 'https://lh3.googleusercontent.com/ogw/ADea4I7wyN6WgGDhKr7mh08qsgwi0O2_3kg9d3XzCMuR=s32-c-mo',
-        fullname: 'Huỳnh Ngọc Tấn',
-        email: 'hntan2000@gmail.com',
-        phone: '0987654321',
-        address: 'Hồ Chí Minh',
-        role: 'user',
-        status: 'block',
+        avatar: '',
+        username: '',
+        password: '',
+        fullname: '',
+        birthday: '',
+        email: '',
+        phone: '',
+        address: '',
+        role: '',
+        status: '',
     };
 
     const [user, setUser] = useState(initialState);
@@ -43,6 +44,8 @@ export default function EditUser() {
         setIsSubmit(true);
     };
 
+    console.log(user);
+
     const validate = () => {
         const errors = {};
         // eslint-disable-next-line no-useless-escape
@@ -59,6 +62,13 @@ export default function EditUser() {
         } else if (!regexPhone.test(user.phone.trim())) {
             errors.phone = 'Vui lòng nhập đúng định dạng số điện thoại';
         }
+
+        if (user.username.trim().length <= 0) {
+            errors.username = 'Vui lòng nhập tên đăng nhập';
+        }
+        if (user.password.trim().length < 8) {
+            errors.password = 'Mật khẩu phải có ít nhất 8 kí tự';
+        }
         return errors;
     };
 
@@ -72,7 +82,7 @@ export default function EditUser() {
 
     return (
         <div className={cx('wrapper')}>
-            <h3>Chỉnh sửa thông tin</h3>
+            <h3>Thêm tài khoản</h3>
             <form className={cx('form')}>
                 <div className={cx('avatar-wrapper')}>
                     <Image className={cx('avatar')} src={avatar} alt="avatar" />
@@ -88,19 +98,48 @@ export default function EditUser() {
                     />
                 </div>
                 <div className={cx('form-group')}>
-                    <label className={cx('form-title')} htmlFor="fullname">
-                        Họ và tên
+                    <label className={cx('form-title')} htmlFor="username">
+                        Tên đăng nhập (*)
                     </label>
                     <input
-                        className={cx('form-control')}
+                        className={cx('form-control', {
+                            error: !!formError.username,
+                        })}
                         type="text"
-                        id="fullname"
-                        name="fullname"
-                        value={user.fullname}
+                        id="username"
+                        name="username"
+                        value={user.username}
                         onChange={(e) =>
                             handleOnChange(e.target.name, e.target.value)
                         }
                     />
+                    {formError.username && (
+                        <span className={cx('form-error')}>
+                            {formError.username}
+                        </span>
+                    )}
+                </div>
+                <div className={cx('form-group')}>
+                    <label className={cx('form-title')} htmlFor="password">
+                        Mật khẩu (*)
+                    </label>
+                    <input
+                        className={cx('form-control', {
+                            error: !!formError.password,
+                        })}
+                        type="password"
+                        id="password"
+                        name="password"
+                        value={user.password}
+                        onChange={(e) =>
+                            handleOnChange(e.target.name, e.target.value)
+                        }
+                    />
+                    {formError.password && (
+                        <span className={cx('form-error')}>
+                            {formError.password}
+                        </span>
+                    )}
                 </div>
                 <div className={cx('form-group')}>
                     <label className={cx('form-title')} htmlFor="email">
@@ -124,6 +163,37 @@ export default function EditUser() {
                         </span>
                     )}
                 </div>
+                <div className={cx('form-group')}>
+                    <label className={cx('form-title')} htmlFor="fullname">
+                        Họ và tên
+                    </label>
+                    <input
+                        className={cx('form-control')}
+                        type="text"
+                        id="fullname"
+                        name="fullname"
+                        value={user.fullname}
+                        onChange={(e) =>
+                            handleOnChange(e.target.name, e.target.value)
+                        }
+                    />
+                </div>
+                <div className={cx('form-group')}>
+                    <label className={cx('form-title')} htmlFor="birthday">
+                        Ngày sinh
+                    </label>
+                    <input
+                        className={cx('form-control')}
+                        type="date"
+                        id="birthday"
+                        name="birthday"
+                        value={user.birthday}
+                        onChange={(e) =>
+                            handleOnChange(e.target.name, e.target.value)
+                        }
+                    />
+                </div>
+
                 <div className={cx('form-group')}>
                     <label className={cx('form-title')} htmlFor="phone">
                         Số điện thoại
@@ -174,8 +244,8 @@ export default function EditUser() {
                             handleOnChange(e.target.name, e.target.value)
                         }
                     >
-                        <option value="admin">Admin</option>
                         <option value="user">User</option>
+                        <option value="admin">Admin</option>
                     </select>
                 </div>
                 <div className={cx('form-group')}>
@@ -202,7 +272,7 @@ export default function EditUser() {
                         type="button"
                         onClick={handleValidate}
                     >
-                        Cập nhật
+                        Thêm
                     </Button>
                     <Button cancel medium to="/users" type="button">
                         Hủy
