@@ -10,19 +10,19 @@
     }
 }
 
-.user {
+.product {
     display: flex;
     align-items: center;
 }
 
-.avatar {
-    width: 40px;
-    height: 40px;
+.product-image {
+    padding: 4px 0;
+    width: 30px;
+    height: 50px;
     object-fit: cover;
-    border-radius: 50%;
 }
 
-.username {
+.name {
     font-size: 16px;
     margin-left: 8px;
 }

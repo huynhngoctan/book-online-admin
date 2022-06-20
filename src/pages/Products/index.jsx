@@ -6,30 +6,30 @@ import { useState } from 'react';
 
 import Button from '~/components/Button';
 import Image from '~/components/Image';
-import styles from './Users.module.scss';
-import { users } from '~/DummyData';
+import styles from './Products.module.scss';
+import { products } from '~/DummyData';
 
 const cx = classNames.bind(styles);
 
-export default function Users() {
+export default function Products() {
     const columns = [
         { field: 'id', headerName: 'ID', width: 70 },
         {
-            field: 'user',
-            headerName: 'Tên đăng nhập',
+            field: 'product',
+            headerName: 'Tên sản phẩm',
             width: 200,
             renderCell: (params) => (
-                <div className={cx('user')}>
+                <div className={cx('product')}>
                     <Image
-                        className={cx('avatar')}
-                        src={params.row.avatar}
-                        alt="avartar"
+                        className={cx('product-image')}
+                        src={params.row.image}
+                        alt="product"
                     />
-                    <p className={cx('username')}>{params.row.username}</p>
+                    <p className={cx('name')}>{params.row.name}</p>
                 </div>
             ),
         },
-        { field: 'email', headerName: 'Email', width: 250 },
+        { field: 'stock', headerName: 'Số lượng', width: 250 },
         {
             field: 'status',
             headerName: 'Trạng thái',
@@ -44,7 +44,7 @@ export default function Users() {
                     <Button
                         edited
                         leftIcon={<FontAwesomeIcon icon={faPenToSquare} />}
-                        to={`/users/edit${params.row.id}`}
+                        to={`/products/edit${params.row.id}`}
                     >
                         Sửa
                     </Button>
@@ -60,7 +60,7 @@ export default function Users() {
         },
     ];
 
-    const [data, setData] = useState(users);
+    const [data, setData] = useState(products);
     const handleDelete = (id) => {
         setData(
             data.filter((item) => {
@@ -71,7 +71,7 @@ export default function Users() {
     return (
         <div className={cx('wrapper')}>
             <div className={cx('actions')}>
-                <Button primary to="/users/new">
+                <Button primary to="/products/new">
                     Thêm
                 </Button>
             </div>
