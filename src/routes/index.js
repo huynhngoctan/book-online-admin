@@ -1,6 +1,7 @@
 import EditProduct from '~/pages/EditProduct';
 import EditUser from '~/pages/EditUser';
 import Home from '~/pages/Home';
+import NewProduct from '~/pages/NewProduct';
 import NewUser from '~/pages/NewUser';
 import Products from '~/pages/Products';
 import Users from '~/pages/Users';
@@ -17,6 +18,10 @@ const publicRoutes = [
     {
         path: '/products/edit:id',
         component: EditProduct,
+    },
+    {
+        path: '/products/new',
+        component: NewProduct,
     },
     {
         path: '/users',
