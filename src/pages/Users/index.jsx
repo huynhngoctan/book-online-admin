@@ -68,6 +68,7 @@ export default function Users() {
             }),
         );
     };
+
     return (
         <div className={cx('wrapper')}>
             <div className={cx('actions')}>
