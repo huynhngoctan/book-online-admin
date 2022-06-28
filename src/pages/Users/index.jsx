@@ -2,12 +2,13 @@ import { faPenToSquare, faTrashCan } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { DataGrid } from '@mui/x-data-grid';
 import classNames from 'classnames/bind';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 import Button from '~/components/Button';
 import Image from '~/components/Image';
 import styles from './Users.module.scss';
-import { users } from '~/DummyData';
+// import { users } from '~/DummyData';
+import * as userService from '~/services/userService';
 
 const cx = classNames.bind(styles);
 
@@ -23,7 +24,7 @@ export default function Users() {
                     <Image
                         className={cx('avatar')}
                         src={params.row.avatar}
-                        alt="avartar"
+                        alt="avatar"
                     />
                     <p className={cx('username')}>{params.row.username}</p>
                 </div>
@@ -60,7 +61,7 @@ export default function Users() {
         },
     ];
 
-    const [data, setData] = useState(users);
+    const [data, setData] = useState([]);
     const handleDelete = (id) => {
         setData(
             data.filter((item) => {
@@ -68,6 +69,15 @@ export default function Users() {
             }),
         );
     };
+
+    // Call API getAllUsers
+    useEffect(() => {
+        const fetchAPI = async () => {
+            const users = await userService.getUsers();
+            setData(users);
+        };
+        fetchAPI();
+    }, []);
 
     return (
         <div className={cx('wrapper')}>
