@@ -1,35 +1,44 @@
 import { faPen } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import classNames from 'classnames/bind';
-import { useEffect, useRef } from 'react';
+import { useEffect } from 'react';
 import { useState } from 'react';
+import { useParams } from 'react-router-dom';
+
 import Button from '~/components/Button';
-import Image from '~/components/Image';
+import images from '~/assets/images';
 import styles from './EditUser.module.scss';
+import { toast, ToastContainer } from 'react-toastify';
+import * as userService from '~/services/userService';
 
 const cx = classNames.bind(styles);
 export default function EditUser() {
-    const [avatar, setAvatar] = useState(
-        'https://lh3.googleusercontent.com/ogw/ADea4I7wyN6WgGDhKr7mh08qsgwi0O2_3kg9d3XzCMuR=s32-c-mo',
-    );
+    let { userId } = useParams();
     const initialState = {
-        avatar: 'https://lh3.googleusercontent.com/ogw/ADea4I7wyN6WgGDhKr7mh08qsgwi0O2_3kg9d3XzCMuR=s32-c-mo',
-        fullname: 'Huỳnh Ngọc Tấn',
-        email: 'hntan2000@gmail.com',
-        phone: '0987654321',
-        address: 'Hồ Chí Minh',
-        role: 'user',
-        status: 'block',
+        id: 1,
+        username: '',
+        password: '',
+        email: '',
+        fullname: '',
+        birthday: '',
+        phone: '',
+        address: '',
+        role: '',
+        status: '',
+        avatar: '',
     };
+
+    const [avatar, setAvatar] = useState();
 
     const [user, setUser] = useState(initialState);
     const [isSubmit, setIsSubmit] = useState(false);
     const [formError, setFormError] = useState({});
 
-    const imageRef = useRef();
-
-    const handleUpdateImage = () => {
-        setAvatar(URL.createObjectURL(imageRef.current.files[0]));
+    const handlePreviewImage = (e) => {
+        const file = e.target.files[0];
+        file.preview = URL.createObjectURL(file);
+        console.log(file.preview);
+        setAvatar(file);
     };
 
     const handleOnChange = (name, value) => {
@@ -62,10 +71,45 @@ export default function EditUser() {
         return errors;
     };
 
+    // Clear Preview avatar url
+    useEffect(() => {
+        return () => {
+            avatar && URL.revokeObjectURL(avatar.preview);
+        };
+    }, [avatar]);
+    // Call API get user
+    useEffect(() => {
+        const fetchAPI = async () => {
+            const user = await userService.getUser(userId);
+            console.log(user);
+            setUser(user);
+        };
+        fetchAPI();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+    // Call API if form is valid
     useEffect(() => {
         if (Object.keys(formError).length === 0 && isSubmit) {
             //Call API
-            console.log(user);
+            // console.log(user);
+            const fetchAPI = async () => {
+                if (avatar) {
+                    const resUpload = await userService.uploadAvatar(avatar);
+                    user.avatar = `http://localhost:8080/api/v1/FileUpload/files/${resUpload}`;
+                }
+                const res = await userService.updateUser(userId, user);
+                res.status === 'success'
+                    ? toast.success('Cập nhật thành công', {
+                          autoClose: 3000,
+                          position: 'top-right',
+                      })
+                    : toast.error('Cập nhật thất bại', {
+                          autoClose: 3000,
+                          position: 'top-right',
+                      });
+                // console.log(res.data);
+            };
+            fetchAPI();
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [formError]);
@@ -75,7 +119,15 @@ export default function EditUser() {
             <h3>Chỉnh sửa thông tin</h3>
             <form className={cx('form')}>
                 <div className={cx('avatar-wrapper')}>
-                    <Image className={cx('avatar')} src={avatar} alt="avatar" />
+                    <img
+                        className={cx('avatar')}
+                        src={
+                            avatar
+                                ? avatar.preview
+                                : user.avatar || images.noImage
+                        }
+                        alt="avatar"
+                    />
                     <label htmlFor="avatar">
                         <FontAwesomeIcon icon={faPen} className={cx('icon')} />
                     </label>
@@ -83,8 +135,20 @@ export default function EditUser() {
                         type="file"
                         name="avatar"
                         id="avatar"
-                        onChange={handleUpdateImage}
-                        ref={imageRef}
+                        onChange={handlePreviewImage}
+                    />
+                </div>
+                <div className={cx('form-group')}>
+                    <label className={cx('form-title')} htmlFor="username">
+                        Tên đăng nhập
+                    </label>
+                    <input
+                        className={cx('form-control', 'disabled')}
+                        type="text"
+                        id="username"
+                        name="username"
+                        value={user.username}
+                        disabled
                     />
                 </div>
                 <div className={cx('form-group')}>
@@ -209,6 +273,7 @@ export default function EditUser() {
                     </Button>
                 </div>
             </form>
+            <ToastContainer />
         </div>
     );
 }

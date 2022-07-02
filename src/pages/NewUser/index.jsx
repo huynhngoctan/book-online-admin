@@ -1,15 +1,18 @@
 import { faPen } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import classNames from 'classnames/bind';
-import { useEffect, useRef } from 'react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import images from '~/assets/images';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 import Button from '~/components/Button';
-import Image from '~/components/Image';
 import styles from './NewUser.module.scss';
+import * as userService from '~/services/userService';
 
 const cx = classNames.bind(styles);
 export default function NewUser() {
-    const [avatar, setAvatar] = useState('');
+    const [avatar, setAvatar] = useState();
     const initialState = {
         avatar: '',
         username: '',
@@ -19,18 +22,20 @@ export default function NewUser() {
         email: '',
         phone: '',
         address: '',
-        role: '',
-        status: '',
+        role: 'user',
+        status: 'Kích hoạt',
     };
 
     const [user, setUser] = useState(initialState);
+    const [username, setUsername] = useState('');
     const [isSubmit, setIsSubmit] = useState(false);
+    const [isUsername, setIsUsername] = useState(false);
     const [formError, setFormError] = useState({});
 
-    const imageRef = useRef();
-
-    const handleUpdateImage = () => {
-        setAvatar(URL.createObjectURL(imageRef.current.files[0]));
+    const handlePreviewImage = (e) => {
+        const file = e.target.files[0];
+        file.preview = URL.createObjectURL(file);
+        setAvatar(file);
     };
 
     const handleOnChange = (name, value) => {
@@ -42,9 +47,8 @@ export default function NewUser() {
     const handleValidate = () => {
         setFormError(validate);
         setIsSubmit(true);
+        document.body.scrollTop = document.documentElement.scrollTop = 0;
     };
-
-    console.log(user);
 
     const validate = () => {
         const errors = {};
@@ -65,6 +69,8 @@ export default function NewUser() {
 
         if (user.username.trim().length <= 0) {
             errors.username = 'Vui lòng nhập tên đăng nhập';
+        } else if (isUsername) {
+            errors.username = 'Tên dăng nhập đã tồn tại';
         }
         if (user.password.trim().length < 8) {
             errors.password = 'Mật khẩu phải có ít nhất 8 kí tự';
@@ -72,20 +78,63 @@ export default function NewUser() {
         return errors;
     };
 
+    // Clear Preview avatar url
     useEffect(() => {
+        return () => {
+            avatar && URL.revokeObjectURL(avatar.preview);
+        };
+    }, [avatar]);
+    // Call API to check username
+    useEffect(() => {
+        if (username) {
+            const fetchAPI = async () => {
+                const res = await userService.checkUsername(username);
+                // console.log(res);
+                if (res.status === 'success') {
+                    setIsUsername(true);
+                } else {
+                    setIsUsername(false);
+                }
+            };
+            fetchAPI();
+        }
+    }, [username]);
+
+    useEffect(() => {
+        // Object.keys(formError).length === 0 &&
         if (Object.keys(formError).length === 0 && isSubmit) {
-            //Call API
-            console.log(user);
+            // Call API
+            const fetchAPI = async () => {
+                if (avatar) {
+                    const resUpload = await userService.uploadAvatar(avatar);
+                    user.avatar = `http://localhost:8080/api/v1/FileUpload/files/${resUpload}`;
+                }
+                const res = await userService.createUser(user);
+                res.status === 'success'
+                    ? toast.success('Thêm thành công', {
+                          autoClose: 3000,
+                          position: 'top-right',
+                      })
+                    : toast.error('Thêm thất bại', {
+                          autoClose: 3000,
+                          position: 'top-right',
+                      });
+                // console.log(res.data);
+            };
+            fetchAPI();
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [formError]);
-
     return (
         <div className={cx('wrapper')}>
             <h3>Thêm tài khoản</h3>
             <form className={cx('form')}>
                 <div className={cx('avatar-wrapper')}>
-                    <Image className={cx('avatar')} src={avatar} alt="avatar" />
+                    <img
+                        className={cx('avatar')}
+                        src={avatar ? avatar.preview : images.noImage}
+                        alt="avatar"
+                    />
                     <label htmlFor="avatar">
                         <FontAwesomeIcon icon={faPen} className={cx('icon')} />
                     </label>
@@ -93,8 +142,7 @@ export default function NewUser() {
                         type="file"
                         name="avatar"
                         id="avatar"
-                        onChange={handleUpdateImage}
-                        ref={imageRef}
+                        onChange={handlePreviewImage}
                     />
                 </div>
                 <div className={cx('form-group')}>
@@ -109,9 +157,10 @@ export default function NewUser() {
                         id="username"
                         name="username"
                         value={user.username}
-                        onChange={(e) =>
-                            handleOnChange(e.target.name, e.target.value)
-                        }
+                        onChange={(e) => {
+                            handleOnChange(e.target.name, e.target.value);
+                            setUsername(e.target.value);
+                        }}
                     />
                     {formError.username && (
                         <span className={cx('form-error')}>
@@ -261,8 +310,8 @@ export default function NewUser() {
                             handleOnChange(e.target.name, e.target.value)
                         }
                     >
-                        <option value="active">Kích hoạt</option>
-                        <option value="block">Khóa</option>
+                        <option value="Kích hoạt">Kích hoạt</option>
+                        <option value="Khóa">Khóa</option>
                     </select>
                 </div>
                 <div className={cx('actions')}>
@@ -279,6 +328,7 @@ export default function NewUser() {
                     </Button>
                 </div>
             </form>
+            <ToastContainer />
         </div>
     );
 }

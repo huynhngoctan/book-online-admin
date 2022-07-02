@@ -3,6 +3,9 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { DataGrid } from '@mui/x-data-grid';
 import classNames from 'classnames/bind';
 import { useState, useEffect } from 'react';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import Swal from 'sweetalert2';
 
 import Button from '~/components/Button';
 import Image from '~/components/Image';
@@ -32,9 +35,14 @@ export default function Users() {
         },
         { field: 'email', headerName: 'Email', width: 250 },
         {
+            field: 'role',
+            headerName: 'Quyền',
+            width: 100,
+        },
+        {
             field: 'status',
             headerName: 'Trạng thái',
-            width: 150,
+            width: 100,
         },
         {
             field: 'action',
@@ -45,7 +53,7 @@ export default function Users() {
                     <Button
                         edited
                         leftIcon={<FontAwesomeIcon icon={faPenToSquare} />}
-                        to={`/users/edit${params.row.id}`}
+                        to={`/users/edit/${params.row.id}`}
                     >
                         Sửa
                     </Button>
@@ -63,11 +71,37 @@ export default function Users() {
 
     const [data, setData] = useState([]);
     const handleDelete = (id) => {
-        setData(
-            data.filter((item) => {
-                return item.id !== id;
-            }),
-        );
+        const fetchAPI = async () => {
+            const res = await userService.deleteUser(id);
+            res.status === 'success'
+                ? toast.success('Xóa thành công', {
+                      autoClose: 3000,
+                      position: 'top-right',
+                  })
+                : toast.error('Xóa thất bại', {
+                      autoClose: 3000,
+                      position: 'top-right',
+                  });
+        };
+        Swal.fire({
+            title: 'Thông báo',
+            text: 'Bạn có chắc là muốn xóa tài khoản này?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Đồng ý',
+            cancelButtonText: 'Hủy',
+        }).then((result) => {
+            if (result.isConfirmed) {
+                setData(
+                    data.filter((item) => {
+                        return item.id !== id;
+                    }),
+                );
+                fetchAPI();
+            }
+        });
     };
 
     // Call API getAllUsers
@@ -94,6 +128,7 @@ export default function Users() {
                 rowsPerPageOptions={[8]}
                 disableSelectionOnClick
             />
+            <ToastContainer />
         </div>
     );
 }

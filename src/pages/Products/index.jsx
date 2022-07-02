@@ -44,7 +44,7 @@ export default function Products() {
                     <Button
                         edited
                         leftIcon={<FontAwesomeIcon icon={faPenToSquare} />}
-                        to={`/products/edit${params.row.id}`}
+                        to={`/products/edit/${params.row.id}`}
                     >
                         Sửa
                     </Button>

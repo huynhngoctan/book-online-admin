@@ -16,7 +16,7 @@ const publicRoutes = [
         component: Products,
     },
     {
-        path: '/products/edit:id',
+        path: '/products/edit/:productId',
         component: EditProduct,
     },
     {
@@ -28,7 +28,7 @@ const publicRoutes = [
         component: Users,
     },
     {
-        path: '/users/edit:id',
+        path: '/users/edit/:userId',
         component: EditUser,
     },
     {
