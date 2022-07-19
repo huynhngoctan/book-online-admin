@@ -1,37 +1,44 @@
-import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
-import { CKEditor } from '@ckeditor/ckeditor5-react';
+// import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+// import { CKEditor } from '@ckeditor/ckeditor5-react';
 import { faPen } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import classNames from 'classnames/bind';
-import { useEffect, useRef } from 'react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+
 import Button from '~/components/Button';
-import Image from '~/components/Image';
 import styles from './NewProduct.module.scss';
+import images from '~/assets/images';
+import { toast, ToastContainer } from 'react-toastify';
+import * as productService from '~/services/productService';
 
 const cx = classNames.bind(styles);
 export default function NewProduct() {
-    const [image, setImage] = useState('');
+    const [image, setImage] = useState();
     const initialState = {
-        image: '',
         name: '',
-        stock: '',
         author: '',
         publisher: '',
-        publishingYear: '',
-        genre: '',
-        status: '',
+        publishingYear: 0,
+        genre: 'Tiểu thuyết',
+        weight: 0,
+        numberOfPages: 0,
+        status: 'Mở bán',
         description: '',
+        stock: 0,
+        price: 0,
+        linkImage: '',
     };
 
     const [product, setProduct] = useState(initialState);
     const [isSubmit, setIsSubmit] = useState(false);
     const [formError, setFormError] = useState({});
+    const [name, setName] = useState('');
+    const [isName, setIsName] = useState(false);
 
-    const imageRef = useRef();
-
-    const handleUpdateImage = () => {
-        setImage(URL.createObjectURL(imageRef.current.files[0]));
+    const handlePreviewImage = (e) => {
+        const file = e.target.files[0];
+        file.preview = URL.createObjectURL(file);
+        setImage(file);
     };
 
     const handleOnChange = (name, value) => {
@@ -53,6 +60,8 @@ export default function NewProduct() {
         // eslint-disable-next-line no-useless-escape
         if (product.name.length <= 0) {
             errors.name = 'Vui lòng nhập tên';
+        } else if (isName) {
+            errors.name = 'Tên đăng nhập đã tồn tại';
         }
         if (product.stock.length <= 0) {
             errors.stock = 'Vui lòng nhập số lượng';
@@ -69,10 +78,45 @@ export default function NewProduct() {
         return errors;
     };
 
+    //Clear preview image
+    useEffect(() => {
+        return () => {
+            image && URL.revokeObjectURL(image.preview);
+        };
+    }, [image]);
+    // Call API check name
+    useEffect(() => {
+        if (name) {
+            const fetchAPI = async () => {
+                const res = await productService.checkName(name);
+
+                if (res.status === 'success') setIsName(true);
+                else setIsName(false);
+            };
+            fetchAPI();
+        }
+    }, [name]);
+    // Call API add product if form is valid
     useEffect(() => {
         if (Object.keys(formError).length === 0 && isSubmit) {
-            //Call API
-            console.log(product);
+            const fetchAPI = async () => {
+                if (image) {
+                    const resUpload = await productService.uploadImage(image);
+                    product.linkImage = `http://localhost:8080/api/v1/FileUpload/files/${resUpload}`;
+                }
+                const res = await productService.createProduct(product);
+
+                res.status === 'success'
+                    ? toast.success('Thêm thành công', {
+                          autoClose: 3000,
+                          position: 'top-right',
+                      })
+                    : toast.error('Thêm thất bại', {
+                          autoClose: 3000,
+                          position: 'top-right',
+                      });
+            };
+            fetchAPI();
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [formError]);
@@ -82,7 +126,11 @@ export default function NewProduct() {
             <h3>Thêm sản phẩm</h3>
             <form className={cx('form')}>
                 <div className={cx('image-wrapper')}>
-                    <Image className={cx('image')} src={image} alt="image" />
+                    <img
+                        className={cx('image')}
+                        src={image ? image.preview : images.noImage}
+                        alt="img"
+                    />
                     <label htmlFor="image">
                         <FontAwesomeIcon icon={faPen} className={cx('icon')} />
                     </label>
@@ -90,8 +138,7 @@ export default function NewProduct() {
                         type="file"
                         name="image"
                         id="image"
-                        onChange={handleUpdateImage}
-                        ref={imageRef}
+                        onChange={handlePreviewImage}
                     />
                 </div>
                 <div className={cx('form-group')}>
@@ -106,9 +153,10 @@ export default function NewProduct() {
                         id="name"
                         name="name"
                         value={product.name}
-                        onChange={(e) =>
-                            handleOnChange(e.target.name, e.target.value)
-                        }
+                        onChange={(e) => {
+                            handleOnChange(e.target.name, e.target.value);
+                            setName(e.target.value);
+                        }}
                     />
                     {formError.name && (
                         <span className={cx('form-error')}>
@@ -208,6 +256,40 @@ export default function NewProduct() {
                     )}
                 </div>
                 <div className={cx('form-group')}>
+                    <label className={cx('form-title')} htmlFor="weight">
+                        Trọng lượng (gram)
+                    </label>
+                    <input
+                        className={cx('form-control', {
+                            error: !!formError.weight,
+                        })}
+                        type="number"
+                        id="weight"
+                        name="weight"
+                        value={product.weight}
+                        onChange={(e) =>
+                            handleOnChange(e.target.name, e.target.value)
+                        }
+                    />
+                </div>
+                <div className={cx('form-group')}>
+                    <label className={cx('form-title')} htmlFor="numberOfPages">
+                        Số trang
+                    </label>
+                    <input
+                        className={cx('form-control', {
+                            error: !!formError.numberOfPages,
+                        })}
+                        type="number"
+                        id="numberOfPages"
+                        name="numberOfPages"
+                        value={product.numberOfPages}
+                        onChange={(e) =>
+                            handleOnChange(e.target.name, e.target.value)
+                        }
+                    />
+                </div>
+                <div className={cx('form-group')}>
                     <label className={cx('form-title')} htmlFor="genre">
                         Thể loại
                     </label>
@@ -245,7 +327,16 @@ export default function NewProduct() {
                     <label className={cx('form-title')} htmlFor="description">
                         Mô tả
                     </label>
-                    <CKEditor
+                    <textarea
+                        id="description"
+                        className={cx('form-textarea')}
+                        name="description"
+                        value={product.description}
+                        onChange={(e) =>
+                            handleOnChange(e.target.name, e.target.value)
+                        }
+                    />
+                    {/* <CKEditor
                         editor={ClassicEditor}
                         data={product.description}
                         onReady={(editor) => {
@@ -256,7 +347,7 @@ export default function NewProduct() {
                             const data = editor.getData();
                             handleOnChange('description', data);
                         }}
-                    />
+                    /> */}
                 </div>
                 <div className={cx('actions')}>
                     <Button
@@ -272,6 +363,7 @@ export default function NewProduct() {
                     </Button>
                 </div>
             </form>
+            <ToastContainer />
         </div>
     );
 }

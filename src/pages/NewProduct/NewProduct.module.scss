@@ -11,14 +11,15 @@
 
 .image-wrapper {
     width: 120px;
-    height: 120px;
+    height: 150px;
     margin: 0 auto;
     position: relative;
 
     .image {
         width: 120px;
-        height: 120px;
+        height: 150px;
         border: 1px solid lightgray;
+        object-fit: cover;
     }
 
     input {
@@ -75,4 +76,14 @@
 
 .form-error {
     color: var(--danger-color);
+}
+
+.form-textarea {
+    height: 200px;
+    font-size: 1.6rem;
+    color: var(--text-color);
+    padding: 8px;
+    border: 1px solid gray;
+    border-radius: 4px;
+    outline: none;
 }
