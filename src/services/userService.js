@@ -44,6 +44,7 @@ export const updateUser = async (id, user) => {
         console.log(error);
     }
 };
+
 export const deleteUser = async (id) => {
     try {
         const res = await request.deletes(`/users/${id}`);

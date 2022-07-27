@@ -255,8 +255,8 @@ export default function EditUser() {
                             handleOnChange(e.target.name, e.target.value)
                         }
                     >
-                        <option value="active">Kích hoạt</option>
-                        <option value="block">Khóa</option>
+                        <option value="Kích hoạt">Kích hoạt</option>
+                        <option value="Khóa">Khóa</option>
                     </select>
                 </div>
                 <div className={cx('actions')}>
