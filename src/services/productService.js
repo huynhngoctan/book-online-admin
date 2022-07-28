@@ -18,6 +18,19 @@ export const getProduct = async (id) => {
     }
 };
 
+export const searchProduct = async (q) => {
+    try {
+        const res = await request.get('/products/search', {
+            params: {
+                q,
+            },
+        });
+        return res.data;
+    } catch (error) {
+        console.log(error);
+    }
+};
+
 export const checkName = async (name) => {
     try {
         const res = await request.get('/products/findName', {

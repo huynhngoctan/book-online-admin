@@ -1,21 +1,18 @@
 import styles from './AccountItem.module.scss';
 import classNames from 'classnames/bind';
 import Image from '~/components/Image';
+import { Link } from 'react-router-dom';
 
 const cx = classNames.bind(styles);
 
-export default function AccountItem() {
+export default function AccountItem({ data }) {
     return (
-        <div className={cx('wrapper')}>
-            <Image
-                className={cx('avatar')}
-                src="https://lh3.googleusercontent.com/ogw/ADea4I7wyN6WgGDhKr7mh08qsgwi0O2_3kg9d3XzCMuR=s32-c-mo"
-                alt="avatar"
-            />
+        <Link to={`/users/edit/${data.id}`} className={cx('wrapper')}>
+            <Image className={cx('avatar')} src={data.avatar} alt="avatar" />
             <div className={cx('info')}>
-                <h4 className={cx('username')}>Tan Huynh</h4>
-                <span className={cx('status')}>Kích hoạt</span>
+                <h4 className={cx('username')}>{data.username}</h4>
+                <span className={cx('status')}>{data.status}</span>
             </div>
-        </div>
+        </Link>
     );
 }

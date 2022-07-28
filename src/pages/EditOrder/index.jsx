@@ -86,7 +86,7 @@ export default function EditOrder() {
         };
         fetchAPI();
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    }, [orderId]);
 
     // Handle update order
     const handleUpdateOrder = () => {

@@ -16,6 +16,20 @@ export const getUser = async (userId) => {
         console.log(error);
     }
 };
+
+export const searchUser = async (q) => {
+    try {
+        const res = await request.get('/users/search', {
+            params: {
+                q,
+            },
+        });
+        return res.data;
+    } catch (error) {
+        console.log(error);
+    }
+};
+
 export const checkUsername = async (username) => {
     try {
         const res = await request.get('/users/findUsername', {

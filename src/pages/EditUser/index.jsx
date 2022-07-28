@@ -86,7 +86,7 @@ export default function EditUser() {
         };
         fetchAPI();
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    }, [userId]);
     // Call API if form is valid
     useEffect(() => {
         if (Object.keys(formError).length === 0 && isSubmit) {

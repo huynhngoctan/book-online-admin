@@ -72,7 +72,7 @@ export default function EditProduct() {
         };
         fetchAPI();
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    }, [productId]);
 
     //Clear preview image
     useEffect(() => {
