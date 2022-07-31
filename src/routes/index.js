@@ -7,6 +7,7 @@ import NewUser from '~/pages/NewUser';
 import Orders from '~/pages/Orders';
 import Products from '~/pages/Products';
 import Users from '~/pages/Users';
+import Login from '~/pages/Login';
 
 const publicRoutes = [
     {
@@ -44,6 +45,11 @@ const publicRoutes = [
     {
         path: '/orders/edit/:orderId',
         component: EditOrder,
+    },
+    {
+        path: '/login',
+        component: Login,
+        layout: null,
     },
 ];
 

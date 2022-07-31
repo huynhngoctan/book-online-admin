@@ -22,7 +22,6 @@ const cx = classNames.bind(styles);
 export default function Search() {
     const [searchValue, setSearchValue] = useState('');
     const [searchResult, setSearchResult] = useState([]);
-    const [productResult, setProductResult] = useState([]);
     const [showResult, setShowResult] = useState(false);
     const [loading, setLoading] = useState(false);
     const [searchFilter, setSearchFilter] = useState('user');

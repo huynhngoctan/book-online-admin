@@ -1,5 +1,19 @@
 import * as request from '~/utils/request';
 
+export const login = async (username, password) => {
+    try {
+        const res = await request.get('/users/loginAdmin', {
+            params: {
+                username,
+                password,
+            },
+        });
+        return res;
+    } catch (error) {
+        console.log(error);
+    }
+};
+
 export const getUsers = async () => {
     try {
         const res = await request.get('/users');

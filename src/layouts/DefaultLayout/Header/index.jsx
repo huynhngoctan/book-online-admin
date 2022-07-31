@@ -5,9 +5,17 @@ import classNames from 'classnames/bind';
 import styles from './Header.module.scss';
 import { Wrapper as PopperWrapper } from '~/components/Popper';
 import Search from '~/layouts/components/Search';
+import { useNavigate } from 'react-router-dom';
 
 const cx = classNames.bind(styles);
 export default function Header() {
+    let navigate = useNavigate();
+    const user = JSON.parse(localStorage.getItem('user'));
+    const handleLogout = (e) => {
+        e.preventDefault();
+        localStorage.removeItem('user');
+        navigate('/login');
+    };
     return (
         <div className={cx('wrapper')}>
             <div className={cx('inner')}>
@@ -37,6 +45,7 @@ export default function Header() {
                                         <a
                                             className={cx('action-link')}
                                             href="/"
+                                            onClick={handleLogout}
                                         >
                                             Đăng xuất
                                         </a>
@@ -50,10 +59,10 @@ export default function Header() {
                     <div className={cx('account')}>
                         <img
                             className={cx('avatar')}
-                            src="https://lh3.googleusercontent.com/ogw/ADea4I7wyN6WgGDhKr7mh08qsgwi0O2_3kg9d3XzCMuR=s32-c-mo"
+                            src={user.avatar}
                             alt="avatar"
                         />
-                        <span className={cx('username')}> Tan Huynh</span>
+                        <span className={cx('username')}>{user.username}</span>
                     </div>
                 </Tippy>
             </div>
