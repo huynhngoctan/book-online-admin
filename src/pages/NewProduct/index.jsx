@@ -302,8 +302,9 @@ export default function NewProduct() {
                             handleOnChange(e.target.name, e.target.value)
                         }
                     >
-                        <option value="Tiểu thuyết">Tiểu thuyết</option>
-                        <option value="Sách giáo khoa">Sách giáo khoa</option>
+                        <option value="Văn học">Văn học</option>
+                        <option value="Kỹ năng">Kỹ năng</option>
+                        <option value="Kinh tế">Kinh tế</option>
                     </select>
                 </div>
                 <div className={cx('form-group')}>
