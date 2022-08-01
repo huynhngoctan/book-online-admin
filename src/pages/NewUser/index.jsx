@@ -69,8 +69,6 @@ export default function NewUser() {
 
         if (user.username.trim().length <= 0) {
             errors.username = 'Vui lòng nhập tên đăng nhập';
-        } else if (isUsername) {
-            errors.username = 'Tên dăng nhập đã tồn tại';
         }
         if (user.password.trim().length < 8) {
             errors.password = 'Mật khẩu phải có ít nhất 8 kí tự';
@@ -165,6 +163,11 @@ export default function NewUser() {
                     {formError.username && (
                         <span className={cx('form-error')}>
                             {formError.username}
+                        </span>
+                    )}
+                    {isUsername && (
+                        <span className={cx('form-error')}>
+                            Tên đăng nhập đã tồn tại
                         </span>
                     )}
                 </div>

@@ -60,19 +60,20 @@ export default function NewProduct() {
         // eslint-disable-next-line no-useless-escape
         if (product.name.length <= 0) {
             errors.name = 'Vui lòng nhập tên';
-        } else if (isName) {
-            errors.name = 'Tên đăng nhập đã tồn tại';
         }
-        if (product.stock.length <= 0) {
+        if (product.stock <= 0) {
             errors.stock = 'Vui lòng nhập số lượng';
         }
         if (product.author.length <= 0) {
             errors.author = 'Vui lòng nhập tên tác giả';
         }
+        if (product.price <= 0) {
+            errors.price = 'Vui lòng nhập giá';
+        }
         if (product.publisher.length <= 0) {
             errors.publisher = 'Vui lòng nhập tên nhà xuất bản';
         }
-        if (product.publishingYear.length <= 0) {
+        if (product.publishingYear <= 0) {
             errors.publishingYear = 'Vui lòng nhập năm xuất bản';
         }
         return errors;
@@ -161,6 +162,11 @@ export default function NewProduct() {
                     {formError.name && (
                         <span className={cx('form-error')}>
                             {formError.name}
+                        </span>
+                    )}
+                    {isName && (
+                        <span className={cx('form-error')}>
+                            Tên sản phẩm đã tồn tại
                         </span>
                     )}
                 </div>
@@ -252,6 +258,28 @@ export default function NewProduct() {
                     {formError.publishingYear && (
                         <span className={cx('form-error')}>
                             {formError.publishingYear}
+                        </span>
+                    )}
+                </div>
+                <div className={cx('form-group')}>
+                    <label className={cx('form-title')} htmlFor="price">
+                        Giá bán (*)
+                    </label>
+                    <input
+                        className={cx('form-control', {
+                            error: !!formError.price,
+                        })}
+                        type="number"
+                        id="price"
+                        name="price"
+                        value={product.price}
+                        onChange={(e) =>
+                            handleOnChange(e.target.name, e.target.value)
+                        }
+                    />
+                    {formError.price && (
+                        <span className={cx('form-error')}>
+                            {formError.price}
                         </span>
                     )}
                 </div>
